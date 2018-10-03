@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+
+ENV['RAILS_ENV'] = 'test'
+require_relative './config/environment'
+require 'bindex'
+
+redis = Redis.new(url: 'redis://localhost:6379/0')
+
+case (0..0).all? { |_| redis.get('A'); false }
+when false
+  puts "OK!"
+when nil
+  fail 'Range#all? returned nil'
+end
