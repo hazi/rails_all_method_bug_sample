@@ -1,0 +1,37 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: ruby:2.5.1
+        environment:
+          BUNDLE_JOBS: 3
+          BUNDLE_RETRY: 3
+          BUNDLE_PATH: vendor/bundle
+
+      - image: circleci/mysql:5.7
+      - image: redis:4.0
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - bundle-v1-{{ checksum "Gemfile.lock" }}
+            - bundle-v1-
+
+      - run:
+          name: Bundle Install
+          command: bundle check || bundle install
+
+      # Store bundle cache
+      - save_cache:
+          key: bundle-v1-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+      - run:
+          name: Bundle Install
+          command: bundle install
+
+      - run:
+          name: run example
+          command: ./example
