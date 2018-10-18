@@ -23,6 +23,7 @@ Ruby 2.4.4 および、2.4.5、2.3.7 では確認できませんでした。
 [![CircleCI](https://circleci.com/gh/hazi/rails_all_method_bug_sample.svg?style=svg)](https://circleci.com/gh/hazi/rails_all_method_bug_sample)
 
 master: https://circleci.com/gh/hazi/rails_all_method_bug_sample/tree/master
+
 MULTI_VIRSION: https://circleci.com/gh/hazi/rails_all_method_bug_sample/tree/MULTI_VIRSION
 
 # EXAMPLE
