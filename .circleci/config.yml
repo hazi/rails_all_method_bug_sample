@@ -1,37 +1,53 @@
 version: 2
-jobs:
-  build:
-    docker:
-      - image: ruby:2.5.1
-        environment:
-          BUNDLE_JOBS: 3
-          BUNDLE_RETRY: 3
-          BUNDLE_PATH: vendor/bundle
 
+.example_run: &example_run
+  steps:
+    - checkout
+    - run:
+        name: Bundle Install
+        command: bundle install
+    - run:
+        name: run example
+        command: ./example
+
+jobs:
+  ruby2_6rc:
+    <<: *example_run
+    docker:
+      - image: ruby:2.6-rc
       - image: circleci/mysql:5.7
       - image: redis:4.0
-    steps:
-      - checkout
+  ruby2_5_1:
+    <<: *example_run
+    docker:
+      - image: ruby:2.5.1
+      - image: circleci/mysql:5.7
+      - image: redis:4.0
+  ruby2_5_0:
+    <<: *example_run
+    docker:
+      - image: ruby:2.5.0
+      - image: circleci/mysql:5.7
+      - image: redis:4.0
+  ruby2_4_4:
+    <<: *example_run
+    docker:
+      - image: ruby:2.4.4
+      - image: circleci/mysql:5.7
+      - image: redis:4.0
+  ruby2_3_7:
+    <<: *example_run
+    docker:
+      - image: ruby:2.3.7
+      - image: circleci/mysql:5.7
+      - image: redis:4.0
 
-      - restore_cache:
-          keys:
-            - bundle-v1-{{ checksum "Gemfile.lock" }}
-            - bundle-v1-
-
-      - run:
-          name: Bundle Install
-          command: bundle check || bundle install
-
-      # Store bundle cache
-      - save_cache:
-          key: bundle-v1-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
-
-      - run:
-          name: Bundle Install
-          command: bundle install
-
-      - run:
-          name: run example
-          command: ./example
+workflows:
+  version: 2
+  ruby_versions:
+    jobs:
+      - ruby2_6rc
+      - ruby2_5_1
+      - ruby2_5_0
+      - ruby2_4_4
+      - ruby2_3_7
